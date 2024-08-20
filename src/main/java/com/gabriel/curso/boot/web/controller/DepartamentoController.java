@@ -11,7 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.curso.boot.domain.Departamento;
 import com.gabriel.curso.boot.service.DepartamentoService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
