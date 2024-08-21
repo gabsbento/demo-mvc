@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -30,17 +32,30 @@ public class CargoController {
 	}
 	
 	@GetMapping("/listar")
-	public String listar() {
+	public String listar(ModelMap model) {
+		model.addAttribute("cargos", cargoService.buscarTodos());
 		return "/cargo/lista";
 	}
 	
 	@PostMapping("/salvar")
 	public String salvar(Cargo cargo, RedirectAttributes attr) {
-		cargoService.salvar(cargo);
+		System.out.println(cargo.toString());
+		//cargoService.salvar(cargo);
 		attr.addFlashAttribute("success", "cargo inserido com sucesso");
 		return "redirect:/cargos/cadastrar";
 	}
-	
+	@GetMapping("/editar/{id}")
+	public String predEditar(@PathVariable("id") Long id, ModelMap model) {
+		System.out.println(id);
+		model.addAttribute("cargo", cargoService.buscarPorId(id));
+		return "/cargo/cadastro";
+	}
+	@PostMapping("/editar")
+	public String editar(Cargo cargo, RedirectAttributes attr) {
+		cargoService.editar(cargo);
+		attr.addFlashAttribute("success", "Registro atualizado com Sucesso");
+		return "redirect:/cargos/cadastrar";
+	}
 	@ModelAttribute("departamentos")
 	public List<Departamento> listDeDepartamentos(){
 		return departamentoService.buscarTodos();
