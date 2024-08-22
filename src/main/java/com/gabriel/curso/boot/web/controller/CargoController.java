@@ -16,48 +16,59 @@ import com.gabriel.curso.boot.domain.Cargo;
 import com.gabriel.curso.boot.domain.Departamento;
 import com.gabriel.curso.boot.service.CargoService;
 import com.gabriel.curso.boot.service.DepartamentoService;
-
 @Controller
 @RequestMapping("/cargos")
 public class CargoController {
+	
 	@Autowired
 	private CargoService cargoService;
-	
 	@Autowired
 	private DepartamentoService departamentoService;
-	
+
 	@GetMapping("/cadastrar")
-	public String cadastrar() {
+	public String cadastrar(Cargo cargo) {
 		return "/cargo/cadastro";
 	}
 	
 	@GetMapping("/listar")
 	public String listar(ModelMap model) {
 		model.addAttribute("cargos", cargoService.buscarTodos());
-		return "/cargo/lista";
+		return "/cargo/lista"; 
 	}
 	
 	@PostMapping("/salvar")
 	public String salvar(Cargo cargo, RedirectAttributes attr) {
-		System.out.println(cargo.toString());
-		//cargoService.salvar(cargo);
-		attr.addFlashAttribute("success", "cargo inserido com sucesso");
+		cargoService.salvar(cargo);
+		attr.addFlashAttribute("success", "Cargo inserido com sucesso.");
 		return "redirect:/cargos/cadastrar";
 	}
+	
 	@GetMapping("/editar/{id}")
-	public String predEditar(@PathVariable("id") Long id, ModelMap model) {
-		System.out.println(id);
+	public String preEditar(@PathVariable("id") Long id, ModelMap model) {
 		model.addAttribute("cargo", cargoService.buscarPorId(id));
-		return "/cargo/cadastro";
+		return "cargo/cadastro";
 	}
+	
 	@PostMapping("/editar")
 	public String editar(Cargo cargo, RedirectAttributes attr) {
 		cargoService.editar(cargo);
-		attr.addFlashAttribute("success", "Registro atualizado com Sucesso");
+		attr.addFlashAttribute("success", "Registro atualizado com sucesso.");
 		return "redirect:/cargos/cadastrar";
 	}
-	@ModelAttribute("departamentos")
-	public List<Departamento> listDeDepartamentos(){
-		return departamentoService.buscarTodos();
+	
+	@GetMapping("/excluir/{id}")
+	public String excluir(@PathVariable("id") Long id, RedirectAttributes attr) {
+		if (cargoService.cargoTemFuncionarios(id)) {
+			attr.addFlashAttribute("fail", "Cargo não excluido. Tem funcionário(s) vinculado(s).");
+		} else {
+			cargoService.excluir(id);
+			attr.addFlashAttribute("success", "Cargo excluido com sucesso.");
+		}
+		return "redirect:/cargos/listar";
 	}
+	
+	@ModelAttribute("departamentos")
+	public List<Departamento> listaDeDepartamentos() {
+		return departamentoService.buscarTodos();
+	}	
 }
