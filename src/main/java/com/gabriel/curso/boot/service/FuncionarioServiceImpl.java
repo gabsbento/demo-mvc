@@ -15,37 +15,34 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	
 	@Autowired
 	private FuncionarioDao dao;
-	
-	@Override
+
 	@Transactional(readOnly = false)
+	@Override
 	public void salvar(Funcionario funcionario) {
-		// TODO Auto-generated method stub
 		dao.save(funcionario);
 	}
 
-	@Override
 	@Transactional(readOnly = false)
+	@Override
 	public void editar(Funcionario funcionario) {
-		// TODO Auto-generated method stub
 		dao.update(funcionario);
 	}
 
-	@Override
 	@Transactional(readOnly = false)
+	@Override
 	public void excluir(Long id) {
-		// TODO Auto-generated method stub
 		dao.delete(id);
 	}
 
 	@Override
 	public Funcionario buscarPorId(Long id) {
-		// TODO Auto-generated method stub
+		
 		return dao.findById(id);
 	}
 
 	@Override
 	public List<Funcionario> buscarTodos() {
-		// TODO Auto-generated method stub
+		
 		return dao.findAll();
 	}
 
