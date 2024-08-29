@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.curso.boot.domain.Cargo;
@@ -54,7 +55,7 @@ public class FuncionarioController {
 	@PostMapping("/editar")
 	public String editar(Funcionario funcionario, RedirectAttributes attr) {
 		funcionarioService.editar(funcionario);
-		attr.addFlashAttribute("success", "Departamento editado com sucesso");
+		attr.addFlashAttribute("success", "Funcionario editado com sucesso");
 		return "redirect:/funcionarios/cadastrar";
 	}
 	@GetMapping("/excluir/{id}")
@@ -63,6 +64,13 @@ public class FuncionarioController {
 		attr.addFlashAttribute("success", "Funcionario Removido com Sucesso");
 		return "redirect:/funcionarios/listar";
 	}
+	
+	@GetMapping("/buscar/nome")
+	public String getPorNome(@RequestParam("nome") String nome, ModelMap model) {
+		model.addAttribute("funcionarios", funcionarioService.buscarPorNome(nome));
+		return "/funcionario/lista";
+	}
+
 	
 	@ModelAttribute("cargos")
 	public List<Cargo> getCargos() {
