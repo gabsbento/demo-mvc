@@ -52,4 +52,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 		return dao.findByNome(nome);
 	}
 
+	@Override
+	public List<Funcionario> buscarPorCargo(Long id) {
+		// TODO Auto-generated method stub
+		return dao.findByCargo(id);
+	}
+
 }
