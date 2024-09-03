@@ -3,13 +3,9 @@ package com.gabriel.curso.boot.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -21,13 +17,18 @@ import org.springframework.format.annotation.NumberFormat.Style;
 @Table(name = "FUNCIONARIOS")
 public class Funcionario extends AbstractEntity<Long> {
 
+	@NotBlank
+	@Size(max = 255, min = 3)
 	@Column(nullable = false, unique = true)
 	private String nome;
 	
+	@NotNull
 	@NumberFormat(style = Style.CURRENCY, pattern = "#,##0.00")
 	@Column(nullable = false, columnDefinition = "DECIMAL(7,2) DEFAULT 0.00")
 	private BigDecimal salario;
 	
+	@NotNull
+	@PastOrPresent(message = "{PastOrPresent.funcionario.dataEntrada}")
 	@DateTimeFormat(iso = ISO.DATE)
 	@Column(name= "data_entrada", nullable = false, columnDefinition = "DATE")
 	private LocalDate dataEntrada;
@@ -36,10 +37,12 @@ public class Funcionario extends AbstractEntity<Long> {
 	@Column(name = "data_saida", columnDefinition = "DATE")
 	private LocalDate dataSaida;
 	
+	@Valid
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_id_fk")
 	private Endereco endereco;
 	
+	@NotNull(message = "{NotNull.funcionario.cargo}")
 	@ManyToOne
 	@JoinColumn(name = "cargo_id_fk")
 	private Cargo cargo;
