@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gabriel.curso.boot.dao.CargoDao;
 import com.gabriel.curso.boot.domain.Cargo;
+import com.gabriel.curso.boot.util.PaginacaoUtil;
 
 @Service @Transactional(readOnly = false)
 public class CargoServiceImpl implements CargoService {
@@ -48,5 +49,10 @@ public class CargoServiceImpl implements CargoService {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public PaginacaoUtil<Cargo> buscarPorPagina(int pagina) {
+		return dao.buscaPaginada(pagina);
 	}
 }
