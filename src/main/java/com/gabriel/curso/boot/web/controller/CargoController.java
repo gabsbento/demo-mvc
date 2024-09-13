@@ -1,6 +1,7 @@
 package com.gabriel.curso.boot.web.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.curso.boot.domain.Cargo;
 import com.gabriel.curso.boot.domain.Departamento;
 import com.gabriel.curso.boot.service.CargoService;
 import com.gabriel.curso.boot.service.DepartamentoService;
+import com.gabriel.curso.boot.util.PaginacaoUtil;
 @Controller
 @RequestMapping("/cargos")
 public class CargoController {
@@ -34,8 +37,10 @@ public class CargoController {
 	}
 	
 	@GetMapping("/listar")
-	public String listar(ModelMap model) {
-		model.addAttribute("cargos", cargoService.buscarTodos());
+	public String listar(ModelMap model, @RequestParam("page") Optional<Integer> page) {
+		int paginaAtual = page.orElse(1);
+		PaginacaoUtil<Cargo> pageCargo = cargoService.buscarPorPagina(paginaAtual);
+		model.addAttribute("pageCargo", pageCargo);
 		return "/cargo/lista"; 
 	}
 	
